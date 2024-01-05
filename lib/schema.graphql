@@ -1,0 +1,18 @@
+type Blog {
+  id: ID!
+  title: String!
+}
+
+type Query {
+  listBlogs(contains: String!): [Blog]
+    @sql(
+      statement: "SELECT * FROM blogs WHERE title LIKE CONCAT('%', :contains, '%');"
+    )
+    @auth(rules: [{ allow: public }])
+}
+
+type Mutation {
+  createBlog(title: String!): AWSJSON
+    @sql(statement: "INSERT INTO blogs (title) VALUES (:title);")
+    @auth(rules: [{ allow: public }])
+}
